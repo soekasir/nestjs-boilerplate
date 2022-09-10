@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+//==================================USER AND PROFILE MODELS=======================================
+model Profile {
+  id         String    @id @default(uuid())
+  first_name String?
+  last_name  String?
+  birth_date DateTime?
+  gender     Gender?
+  user_id    String    @unique
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? //soft deleting
+
+  user User @relation(fields: [user_id], references: [id])
+}
+
+model User {
+  id         String  @id @default(uuid())
+  isValidate Boolean @default(false)
+  hash       String? //hash to validate account and forgot password
+  password   String
+  email      String  @unique
+  role       Role    @default(user)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  profile Profile?
+}
+
+enum Role {
+  superadmin
+  admin
+  user
+}
+
+enum Gender {
+  male
+  female
+}
+
+//==================================PRODUCT MODELS=======================================
+
+model Product {
+  no          Int             @unique @default(autoincrement())
+  id          String          @id @default(uuid())
+  name        String
+  stock       Int?
+  image       String?
+  description String?
+  category_id String
+  category    ProductCategory @relation(fields: [category_id], references: [id])
+}
+
+model ProductCategory {
+  id      String    @id @default(uuid())
+  name    String
+  Product Product[]
+}
+
+//==================================PRODUCT MODELS=======================================
+
+model Transaction {
+  id        String          @id @default(uuid())
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  deletedAt DateTime?
+  type      TransactionType
+
+  transaction_detail TransactionDetail[]
+}
+
+model TransactionDetail {
+  id             String      @id @default(uuid())
+  product_id     String
+  amount         Int
+  transaction_id String
+  transaction    Transaction @relation(fields: [transaction_id], references: [id])
+}
+
+enum TransactionType {
+  stockIn
+  stockOut
+}
