@@ -28,8 +28,13 @@ export class AuthMiddleware implements NestMiddleware {
         ignoreExpiration: false,
         secret: this.config.get('JWT_SECRET'),
       });
-      const user = await this.authService.getUser({ id: payload.userId });
-      req.user = user;
+      const activeUser = await this.authService.activeUser({
+        id: payload.userId,
+      });
+      if (!activeUser) {
+        throw new UnauthorizedException();
+      }
+      req.user = activeUser;
       next();
     } catch (error) {
       throw new UnauthorizedException();

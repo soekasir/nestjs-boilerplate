@@ -79,6 +79,14 @@ export class AuthService {
     return user;
   }
 
+  async activeUser({ email = undefined, id = undefined }) {
+    const user = await this.getUser({ email, id });
+    if (user.deletedAt || !user.isValidate) {
+      return false;
+    }
+    return user;
+  }
+
   async signup(dto: SignUpDto) {
     const hash_password = await hash(dto.password);
     const hash_validator = await this.getHashValidator();
