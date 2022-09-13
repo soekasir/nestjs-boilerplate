@@ -15,9 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductController = void 0;
 const common_1 = require("@nestjs/common");
 const decorators_1 = require("@nestjs/common/decorators");
-const use_guards_decorator_1 = require("@nestjs/common/decorators/core/use-guards.decorator");
+const client_1 = require("@prisma/client");
 const hooks_1 = require("../../helpers/hooks");
-const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
+const role_guard_1 = require("../auth/role.guard");
 const product_dto_1 = require("./product.dto");
 const product_service_1 = require("./product.service");
 let ProductController = class ProductController {
@@ -72,15 +72,15 @@ let ProductController = class ProductController {
     async updateProduct(dto) {
         const product = await this.productService.updateProduct(dto.id, dto.data);
         if (product) {
-            return (0, hooks_1.useResponse)(true, 'berhasil menghapus product ' + product.name, product);
+            return (0, hooks_1.useResponse)(true, 'berhasil mengupdate product ' + product.name, product);
         }
         else {
-            return (0, hooks_1.useResponse)(false, 'gagal menghapus product');
+            return (0, hooks_1.useResponse)(false, 'gagal mengupdate product');
         }
     }
 };
 __decorate([
-    (0, use_guards_decorator_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, role_guard_1.Roles)([client_1.Role.admin, client_1.Role.superadmin]),
     (0, common_1.Post)('create'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -88,14 +88,14 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductController.prototype, "create", null);
 __decorate([
-    (0, use_guards_decorator_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, role_guard_1.Roles)([client_1.Role.admin, client_1.Role.superadmin]),
     (0, common_1.Get)('category'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], ProductController.prototype, "category", null);
 __decorate([
-    (0, use_guards_decorator_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, role_guard_1.Roles)([client_1.Role.admin, client_1.Role.superadmin]),
     (0, common_1.Post)('category/create'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -103,7 +103,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductController.prototype, "createCategory", null);
 __decorate([
-    (0, use_guards_decorator_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, role_guard_1.Roles)([client_1.Role.admin, client_1.Role.superadmin, client_1.Role.user]),
     (0, common_1.Get)('list'),
     __param(0, (0, decorators_1.Query)()),
     __metadata("design:type", Function),
@@ -111,7 +111,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductController.prototype, "list", null);
 __decorate([
-    (0, use_guards_decorator_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, role_guard_1.Roles)([client_1.Role.admin, client_1.Role.superadmin]),
     (0, common_1.Post)('delete'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -119,7 +119,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductController.prototype, "deleteProduct", null);
 __decorate([
-    (0, use_guards_decorator_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, role_guard_1.Roles)([client_1.Role.admin, client_1.Role.superadmin]),
     (0, common_1.Post)('update'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),

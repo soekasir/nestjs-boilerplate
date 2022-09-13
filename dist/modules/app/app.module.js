@@ -9,14 +9,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
+const core_1 = require("@nestjs/core");
+const jwt_1 = require("@nestjs/jwt");
 const auth_module_1 = require("../auth/auth.module");
+const auth_middleware_1 = require("../auth/auth.middleware");
+const auth_service_1 = require("../auth/auth.service");
+const role_guard_1 = require("../auth/role.guard");
 const prisma_module_1 = require("../prisma/prisma.module");
 const product_module_1 = require("../product/product.module");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 let AppModule = class AppModule {
     configure(consumer) {
-        consumer.apply().forRoutes('product');
+        consumer.apply(auth_middleware_1.AuthMiddleware).forRoutes('product');
     }
 };
 AppModule = __decorate([
@@ -28,9 +33,17 @@ AppModule = __decorate([
             auth_module_1.AuthModule,
             prisma_module_1.PrismaModule,
             product_module_1.ProductModule,
+            jwt_1.JwtModule.register({}),
         ],
         controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService],
+        providers: [
+            app_service_1.AppService,
+            auth_service_1.AuthService,
+            {
+                provide: core_1.APP_GUARD,
+                useClass: role_guard_1.RolesGuard,
+            },
+        ],
     })
 ], AppModule);
 exports.AppModule = AppModule;

@@ -90,7 +90,6 @@ let ProductService = class ProductService {
             return products;
         }
         catch (error) {
-            console.log(error);
             return null;
         }
     }

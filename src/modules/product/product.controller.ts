@@ -1,9 +1,8 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { Query } from '@nestjs/common/decorators';
-import { UseGuards } from '@nestjs/common/decorators/core/use-guards.decorator';
-import { IsNumber } from 'class-validator';
+import { Role } from '@prisma/client';
 import { useResponse } from 'src/helpers/hooks';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Roles } from '../auth/role.guard';
 import {
   GetProductDto,
   ProductCategoryDto,
@@ -16,7 +15,7 @@ import { ProductService } from './product.service';
 export class ProductController {
   constructor(private productService: ProductService) {}
 
-  @UseGuards(JwtAuthGuard)
+  @Roles([Role.admin, Role.superadmin])
   @Post('create')
   async create(@Body() dto: ProductDto) {
     const newProduct = await this.productService.create(dto);
@@ -27,7 +26,7 @@ export class ProductController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles([Role.admin, Role.superadmin])
   @Get('category')
   async category() {
     const categories = await this.productService.getCategories();
@@ -38,7 +37,7 @@ export class ProductController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles([Role.admin, Role.superadmin])
   @Post('category/create')
   async createCategory(@Body() dto: ProductCategoryDto) {
     const newCategory = await this.productService.createCategory(dto);
@@ -49,7 +48,7 @@ export class ProductController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles([Role.admin, Role.superadmin, Role.user])
   @Get('list')
   async list(@Query() query: GetProductDto) {
     const products = await this.productService.getProducts(query);
@@ -60,7 +59,7 @@ export class ProductController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles([Role.admin, Role.superadmin])
   @Post('delete')
   async deleteProduct(@Body() dto: { id: string }) {
     const product = await this.productService.deleteProduct(dto.id);
@@ -75,18 +74,18 @@ export class ProductController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles([Role.admin, Role.superadmin])
   @Post('update')
   async updateProduct(@Body() dto: UpdateProductDto) {
     const product = await this.productService.updateProduct(dto.id, dto.data);
     if (product) {
       return useResponse(
         true,
-        'berhasil menghapus product ' + product.name,
+        'berhasil mengupdate product ' + product.name,
         product,
       );
     } else {
-      return useResponse(false, 'gagal menghapus product');
+      return useResponse(false, 'gagal mengupdate product');
     }
   }
 }

@@ -40,9 +40,10 @@ export const useLog = (
 
     theLog(data);
 
-    if (end_note)
+    if (end_note) {
       console.log(
         `===================================# ${end_note} #===================================`,
       );
+    }
   }
 };

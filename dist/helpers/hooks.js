@@ -22,8 +22,9 @@ const useLog = (data, title = '#', end_note = '***', theLog = console.log) => {
     if ((0, config_1.isDevelopment)()) {
         console.log(`===================================* ${title} *===================================`);
         theLog(data);
-        if (end_note)
+        if (end_note) {
             console.log(`===================================# ${end_note} #===================================`);
+        }
     }
 };
 exports.useLog = useLog;
