@@ -2,6 +2,7 @@ import { SetMetadata } from '@nestjs/common';
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Role } from '@prisma/client';
+import { AuthGuard } from '@nestjs/passport';
 
 export const ROLES_KEY = 'role';
 export const Roles = (role: Role[]) => SetMetadata(ROLES_KEY, role);
@@ -22,3 +23,6 @@ export class RolesGuard implements CanActivate {
     return requiredRoles.some((role) => user.role?.includes(role));
   }
 }
+
+@Injectable()
+export class JwtAuthGuard extends AuthGuard('jwt') {}

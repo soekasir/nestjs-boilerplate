@@ -17,7 +17,7 @@ model Profile {
   user_id    String    @unique
 
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  updatedAt DateTime  @updatedAt @default(now())
   deletedAt DateTime? //soft deleting
 
   user User @relation(fields: [user_id], references: [id])
@@ -32,7 +32,7 @@ model User {
   role       Role    @default(user)
 
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  updatedAt DateTime  @updatedAt @default(now())
   deletedAt DateTime?
 
   profile Profile?
@@ -60,6 +60,10 @@ model Product {
   description String?
   category_id String
   category    ProductCategory @relation(fields: [category_id], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt @default(now())
+  deletedAt DateTime? //soft deleting
 }
 
 model ProductCategory {
@@ -72,10 +76,11 @@ model ProductCategory {
 
 model Transaction {
   id        String          @id @default(uuid())
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @updatedAt
-  deletedAt DateTime?
   type      TransactionType
+
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt @default(now())
+  deletedAt DateTime?
 
   transaction_detail TransactionDetail[]
 }
@@ -85,6 +90,10 @@ model TransactionDetail {
   product_id     String
   amount         Int
   transaction_id String
+
+  updatedAt DateTime        @updatedAt @default(now())
+  deletedAt DateTime?
+
   transaction    Transaction @relation(fields: [transaction_id], references: [id])
 }
 

@@ -1,9 +1,5 @@
-import {
-  ForbiddenException,
-  Injectable,
-  InternalServerErrorException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { pagination } from 'src/helpers/hooks';
 import { PrismaService } from '../prisma/prisma.service';
 import { GetProductDto, ProductCategoryDto, ProductDto } from './product.dto';
 
@@ -76,7 +72,7 @@ export class ProductService {
 
     try {
       const products = await this.prisma.product.findMany({
-        skip: this.skippedProducts(limit, page),
+        skip: pagination(limit, page),
         take: limit,
         include: {
           category: true,
@@ -86,10 +82,5 @@ export class ProductService {
     } catch (error) {
       return null;
     }
-  }
-
-  skippedProducts(limit: number, page: number) {
-    const pagination = limit * (page === 1 ? 0 : page - 1);
-    return pagination;
   }
 }

@@ -19,6 +19,17 @@ async function bootstrap() {
       .setDescription('WEB PROGRAMMER Test - PT. Deptech Digital Indonesia')
       .setVersion('1.0')
       .addTag('api')
+      .addBearerAuth(
+        {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          name: 'JWT',
+          description: 'Enter token',
+          in: 'header',
+        },
+        'JWT-auth', // This name here is important for matching up with @ApiBearerAuth() in controller!
+      )
       .build();
 
     const document = SwaggerModule.createDocument(app, config);

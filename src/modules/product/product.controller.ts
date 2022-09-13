@@ -1,8 +1,9 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { Query } from '@nestjs/common/decorators';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
 import { useResponse } from 'src/helpers/hooks';
-import { Roles } from '../auth/role.guard';
+import { Roles } from '../auth/auth.guard';
 import {
   GetProductDto,
   ProductCategoryDto,
@@ -11,6 +12,8 @@ import {
 } from './product.dto';
 import { ProductService } from './product.service';
 
+@ApiTags('product')
+@ApiBearerAuth('JWT-auth')
 @Controller('product')
 export class ProductController {
   constructor(private productService: ProductService) {}

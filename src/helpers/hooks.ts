@@ -3,7 +3,7 @@ import { isDevelopment } from 'src/config/config';
 /**
  * Gunakan untuk mempermudah response balik
  */
-export const useResponse = (succes: boolean, message: string, data?: any) => {
+export function useResponse(succes: boolean, message: string, data?: any) {
   if (data) {
     return {
       succes: succes,
@@ -18,7 +18,7 @@ export const useResponse = (succes: boolean, message: string, data?: any) => {
       message: message,
     };
   }
-};
+}
 
 /**
  * write in console with style
@@ -27,12 +27,12 @@ export const useResponse = (succes: boolean, message: string, data?: any) => {
  * @param end_note end note
  * @param theLog default console.log
  */
-export const useLog = (
+export function useLog(
   data: any,
   title = '#',
   end_note = '***',
   theLog = console.log,
-) => {
+) {
   if (isDevelopment()) {
     console.log(
       `===================================* ${title} *===================================`,
@@ -46,4 +46,8 @@ export const useLog = (
       );
     }
   }
-};
+}
+
+export function pagination(limit: number, page: number) {
+  return limit * (page === 1 ? 0 : page - 1);
+}
