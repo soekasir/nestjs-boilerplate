@@ -1,9 +1,25 @@
+import { NotFoundException } from '@nestjs/common';
 import { isDevelopment } from 'src/config/config';
 
 /**
  * Gunakan untuk mempermudah response balik
  */
-export function useResponse(succes: boolean, message: string, data?: any) {
+export function useResponse(
+  succes: boolean,
+  message: string,
+  data?: any,
+  exception: any = NotFoundException,
+) {
+  if (!succes) {
+    throw new exception(
+      {
+        succes: succes,
+        message: message,
+      },
+      message,
+    );
+  }
+
   if (data) {
     return {
       succes: succes,

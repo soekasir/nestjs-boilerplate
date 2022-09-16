@@ -20,9 +20,7 @@ export class ProductService {
   async createCategory(dto: ProductCategoryDto) {
     try {
       const newCategory = await this.prisma.productCategory.create({
-        data: {
-          name: dto.name,
-        },
+        data: dto,
       });
       return newCategory;
     } catch (error) {
@@ -34,7 +32,7 @@ export class ProductService {
     try {
       const product = await this.prisma.product.delete({
         where: {
-          id: id,
+          id,
         },
       });
       return product;
@@ -47,7 +45,7 @@ export class ProductService {
     try {
       const product = await this.prisma.product.update({
         where: {
-          id: id,
+          id,
         },
         data: productDto,
       });
