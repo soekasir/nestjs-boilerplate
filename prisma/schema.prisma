@@ -9,7 +9,6 @@ datasource db {
 
 //==================================USER AND PROFILE MODELS=======================================
 model Profile {
-  id         String    @id @default(uuid())
   first_name String?
   last_name  String?
   birth_date DateTime?
@@ -52,7 +51,6 @@ enum Gender {
 //==================================PRODUCT MODELS=======================================
 
 model Product {
-  no          Int             @unique @default(autoincrement())
   id          String          @id @default(uuid())
   name        String
   stock       Int?
